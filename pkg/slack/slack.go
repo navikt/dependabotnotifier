@@ -11,14 +11,42 @@ import (
 const baseUrl = "https://slack.com/api/chat.postMessage"
 
 type Message struct {
-	Channel string `json:"channel"`
-	Text    string `json:"text"`
+	Channel string  `json:"channel"`
+	Blocks  []Block `json:"blocks"`
 }
 
-func SendMessage(channel, text, authToken string) error {
+type Block struct {
+	Type string      `json:"type"`
+	Text interface{} `json:"text,omitempty"`
+}
+
+type Text struct {
+	Type string `json:"type,omitempty"`
+	Text string `json:"text,omitempty"`
+}
+
+func SendMessage(channel, heading, text, authToken string) error {
 	toSend := Message{
 		Channel: channel,
-		Text:    text,
+		Blocks: []Block{
+			{
+				Type: "section",
+				Text: Text{
+					Type: "mrkdwn",
+					Text: fmt.Sprintf("%s", heading),
+				},
+			},
+			{
+				Type: "divider",
+			},
+			{
+				Type: "section",
+				Text: Text{
+					Type: "mrkdwn",
+					Text: text,
+				},
+			},
+		},
 	}
 	serialized, err := json.Marshal(toSend)
 	extraHeaders := http.Header{
@@ -53,9 +81,6 @@ func postRequest(rawUrl string, body []byte, extraHeaders http.Header) error {
 	}
 	if res.StatusCode != http.StatusOK {
 		return fmt.Errorf("got a %d from %s: %v", res.StatusCode, rawUrl, res)
-	}
-	if err != nil {
-		return err
 	}
 	return nil
 }

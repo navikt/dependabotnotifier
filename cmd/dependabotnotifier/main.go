@@ -18,7 +18,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("unable to retrieve repos: %v", err)
 	}
-	fmt.Printf("Found %d repos with Depenadbot disabled", len(reposWithoutDepandabotAlerts))
+	fmt.Printf("Found %d repos with Depenadbot disabled\n", len(reposWithoutDepandabotAlerts))
 
 	repoOwners := make(map[string][]teams.Team)
 	for _, repo := range reposWithoutDepandabotAlerts {
@@ -30,13 +30,16 @@ func main() {
 		}
 		repoOwners[repoFullName] = teamsWithAdmin
 	}
-	fmt.Printf("%v", repoOwners)
 
-	err = slack.SendMessage("C05G9377NRL", "Hei 👋\nDette er en melding over flere \nlinjer.", slackToken)
-	if err != nil {
-		fmt.Printf("%v\n", err)
+	for repo, owners := range repoOwners {
+		for _, owner := range owners {
+			fmt.Printf("Notifying %s about %s in %s\n", owner.Slug, repo, owner.SlackChannel)
+			heading := fmt.Sprintf(`:wave: *Hei, %s* :github2:`, owner.Slug)
+			msg := fmt.Sprintf(`Du er admin i GitHub-repoet "%s". Dette repoet har ikke Dependabot alerts aktivert.\nDependabot hjelper deg å oppdage biblioteker med kjente sårbarheter i appene dine.\nDu kan sjekke status og enable Dependabot <https://github.com/%s/security|her>.`, repo, repo)
+			err = slack.SendMessage("#jk-tullekanal", heading, msg, slackToken)
+		}
 	}
-	println("Sent!")
+	println("Done!")
 }
 
 func envOrDie(name string) string {

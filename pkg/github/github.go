@@ -1,16 +1,13 @@
 package github
 
 import (
-	"bytes"
+	"dependabotshamer/pkg/httputils"
 	"encoding/json"
 	"fmt"
 	"github.com/tomnomnom/linkheader"
 	"io"
 	"net/http"
-	"net/url"
 )
-
-var client = http.Client{}
 
 const baseUrl = "https://api.github.com"
 
@@ -67,7 +64,12 @@ func allReposFor(org, authToken string) ([]RestRepo, error) {
 	for url != "" {
 		fmt.Printf("Retrieving repos from %s\n", url)
 		var reposPart []RestRepo
-		res, err := restRequest(url, authToken)
+		extraHeaders := http.Header{
+			"Accept":        {"application/vnd.github.v3+json"},
+			"User-Agent":    {"NAV IT McBotFace"},
+			"Authorization": {fmt.Sprintf("Bearer %s", authToken)},
+		}
+		res, err := httputils.GetRequest(url, authToken, extraHeaders)
 		if err != nil {
 			return nil, err
 		}
@@ -94,11 +96,13 @@ func hasDependabotAlerts(owner, repo, authToken string) (bool, error) {
 	queryStr := fmt.Sprintf(`query { repository(name: \"%s\", owner: \"%s\") { name hasVulnerabilityAlertsEnabled } }"`, repo, owner)
 	reqBody := fmt.Sprintf(`{"query": "%s"}`, queryStr)
 	u := fmt.Sprintf("%s/graphql", baseUrl)
-	res, err := gqlRequest(u, reqBody, authToken)
-	if err != nil {
-		return false, err
+	extraHeaders := http.Header{
+		"User-Agent":    {"NAV IT McBotFace"},
+		"Content-Type":  {"application/json"},
+		"Accept":        {"application/vnd.github.v4.idl"},
+		"Authorization": {fmt.Sprintf("Bearer %s", authToken)},
 	}
-	resBody, err := io.ReadAll(res.Body)
+	resBody, err := httputils.GQLRequest(u, reqBody, authToken, extraHeaders)
 	if err != nil {
 		return false, err
 	}
@@ -108,52 +112,6 @@ func hasDependabotAlerts(owner, repo, authToken string) (bool, error) {
 		return false, err
 	}
 	return gqlResponse.HasDependabotAlertsEnabled(), nil
-}
-
-func restRequest(rawUrl, authToken string) (*http.Response, error) {
-	u, err := url.Parse(rawUrl)
-	if err != nil {
-		return nil, err
-	}
-	req, err := http.NewRequest("GET", u.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header = http.Header{
-		"Accept":        {"application/vnd.github.v3+json"},
-		"User-Agent":    {"NAV IT McBotFace"},
-		"Authorization": {fmt.Sprintf("Bearer %s", authToken)},
-	}
-	res, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
-}
-
-func gqlRequest(rawUrl, body, authToken string) (*http.Response, error) {
-	u, err := url.Parse(rawUrl)
-	if err != nil {
-		return nil, err
-	}
-	req, err := http.NewRequest("POST", u.String(), bytes.NewBuffer([]byte(body)))
-	if err != nil {
-		return nil, err
-	}
-	req.Header = http.Header{
-		"User-Agent":    {"NAV IT McBotFace"},
-		"Content-Type":  {"application/json"},
-		"Accept":        {"application/vnd.github.v4.idl"},
-		"Authorization": {fmt.Sprintf("Bearer %s", authToken)},
-	}
-	res, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("got a %d from GitHub: %v", res.StatusCode, res)
-	}
-	return res, nil
 }
 
 func nextUrl(linkHeader string) string {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"dependabotshamer/pkg/github"
+	"dependabotshamer/pkg/teams"
 	"fmt"
 	"log"
 	"os"
@@ -9,14 +10,25 @@ import (
 
 func main() {
 	githubToken := envOrDie("GITHUB_TOKEN")
+	teamsToken := envOrDie("TEAMS_TOKEN")
+
 	reposWithoutDepandabotAlerts, err := github.ReposWithDependabotAlertsDisabled("navikt", githubToken)
 	if err != nil {
 		log.Fatalf("unable to retrieve repos: %v", err)
 	}
-	for _, repo := range reposWithoutDepandabotAlerts {
-		fmt.Printf("%s/%s\n", repo.Owner.Name, repo.Name)
-	}
 	fmt.Printf("Found %d repos with Depenadbot disabled", len(reposWithoutDepandabotAlerts))
+
+	repoOwners := make(map[string][]teams.Team)
+	for _, repo := range reposWithoutDepandabotAlerts {
+		repoFullName := fmt.Sprintf("%s/%s", repo.Owner.Name, repo.Name)
+		teamsWithAdmin, err := teams.AdminsFor(repoFullName, teamsToken)
+		if err != nil {
+			fmt.Printf("%v", err)
+			os.Exit(1)
+		}
+		repoOwners[repoFullName] = teamsWithAdmin
+	}
+	fmt.Printf("%v", repoOwners)
 }
 
 func envOrDie(name string) string {

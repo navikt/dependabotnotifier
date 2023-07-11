@@ -32,7 +32,7 @@ func main() {
 	}
 	fmt.Printf("%v", repoOwners)
 
-	err := slack.SendMessage("C05G9377NRL", "Hei 👋\nDette er en melding over flere \nlinjer.", slackToken)
+	err = slack.SendMessage("C05G9377NRL", "Hei 👋\nDette er en melding over flere \nlinjer.", slackToken)
 	if err != nil {
 		fmt.Printf("%v\n", err)
 	}

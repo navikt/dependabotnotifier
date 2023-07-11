@@ -28,7 +28,7 @@ func AdminsFor(repo, authToken string) ([]Team, error) {
 		"Content-Type":  {"application/json"},
 		"Authorization": {fmt.Sprintf("Bearer %s", authToken)},
 	}
-	resBody, err := httputils.GQLRequest("https://teams.nav.cloud.nais.io/query", reqBody, authToken, extraHeaders)
+	resBody, err := httputils.GQLRequest("https://teams.nav.cloud.nais.io/query", reqBody, extraHeaders)
 	if err != nil {
 		return nil, err
 	}

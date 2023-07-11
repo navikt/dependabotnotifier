@@ -8,7 +8,7 @@ import (
 	"net/url"
 )
 
-func GQLRequest(rawUrl, body, authToken string, extraHeaders http.Header) ([]byte, error) {
+func GQLRequest(rawUrl, body string, extraHeaders http.Header) ([]byte, error) {
 	u, err := url.Parse(rawUrl)
 	if err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func GQLRequest(rawUrl, body, authToken string, extraHeaders http.Header) ([]byt
 	return resBody, nil
 }
 
-func GetRequest(rawUrl, authToken string, extraHeaders http.Header) (*http.Response, error) {
+func GetRequest(rawUrl string, extraHeaders http.Header) (*http.Response, error) {
 	u, err := url.Parse(rawUrl)
 	if err != nil {
 		return nil, err

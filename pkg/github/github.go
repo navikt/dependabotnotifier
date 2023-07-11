@@ -69,7 +69,7 @@ func allReposFor(org, authToken string) ([]RestRepo, error) {
 			"User-Agent":    {"NAV IT McBotFace"},
 			"Authorization": {fmt.Sprintf("Bearer %s", authToken)},
 		}
-		res, err := httputils.GetRequest(url, authToken, extraHeaders)
+		res, err := httputils.GetRequest(url, extraHeaders)
 		if err != nil {
 			return nil, err
 		}
@@ -102,7 +102,7 @@ func hasDependabotAlerts(owner, repo, authToken string) (bool, error) {
 		"Accept":        {"application/vnd.github.v4.idl"},
 		"Authorization": {fmt.Sprintf("Bearer %s", authToken)},
 	}
-	resBody, err := httputils.GQLRequest(u, reqBody, authToken, extraHeaders)
+	resBody, err := httputils.GQLRequest(u, reqBody, extraHeaders)
 	if err != nil {
 		return false, err
 	}

@@ -23,18 +23,11 @@ jobs:
           cosign-release: 'v2.1.1'
       - name: Verify runner image
         run: cosign verify --certificate-identity ${{ env.RUNNERIMG_IDENTITY }} --certificate-oidc-issuer ${{ env.RUNNERIMG_ISSUER }} ${{ env.RUNNER_IMG }}
-      - id: "gauth"
-        name: "Authenticate to Google Cloud"
-        uses: "google-github-actions/auth@ef5d53e30bbcd8d0836f4288f5e50ff3e086997d" # ratchet:google-github-actions/auth@v1.0.0
-        with:
-          workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: "gh-dependabotnotifier@nais-io.iam.gserviceaccount.com"
-          token_format: "access_token"
       - uses: nais/docker-build-push@c1d05d5a796be7b24d59a2e76851acdcdbcaff7a # ratchet:nais/docker-build-push@v0
         id: docker-build-push
         name: Build and push Docker image
         with:
-          team: dependabotnotifier
+          team: security-champion-admin
           push_image: false
           pull: true
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}

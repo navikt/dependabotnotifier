@@ -34,3 +34,17 @@ jobs:
           pull: true
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+  deploy_to_prod:
+    name: Deploy to prod-gcp
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # ratchet:actions/checkout@v3
+      - uses: nais/deploy/actions/deploy@913eb0f92e9d132dbe0cbba3390a340675849f30 # ratchet:nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: .nais/nais.yaml
+          VARS: .nais/prod.yaml
+          IMAGE: ${{ needs.build.outputs.tag }}

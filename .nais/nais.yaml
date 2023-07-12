@@ -14,4 +14,4 @@ spec:
       cpu: "100m"
       memory: 300Mi
   envFrom:
-    - secret: github-backup-config
+    - secret: dependabotnotifier

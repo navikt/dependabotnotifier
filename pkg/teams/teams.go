@@ -1,7 +1,7 @@
 package teams
 
 import (
-	"dependabotshamer/pkg/httputils"
+	"dependabotnotifier/pkg/httputils"
 	"encoding/json"
 	"fmt"
 	"net/http"

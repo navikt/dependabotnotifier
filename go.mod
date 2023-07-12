@@ -1,4 +1,4 @@
-module dependabotshamer
+module dependabotnotifier
 
 go 1.20
 

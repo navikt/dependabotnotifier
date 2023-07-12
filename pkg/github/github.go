@@ -1,7 +1,7 @@
 package github
 
 import (
-	"dependabotshamer/pkg/httputils"
+	"dependabotnotifier/pkg/httputils"
 	"encoding/json"
 	"fmt"
 	"github.com/tomnomnom/linkheader"

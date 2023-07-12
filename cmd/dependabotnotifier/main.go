@@ -1,9 +1,9 @@
 package main
 
 import (
-	"dependabotshamer/pkg/github"
-	"dependabotshamer/pkg/slack"
-	"dependabotshamer/pkg/teams"
+	"dependabotnotifier/pkg/github"
+	"dependabotnotifier/pkg/slack"
+	"dependabotnotifier/pkg/teams"
 	"fmt"
 	"log"
 	"os"

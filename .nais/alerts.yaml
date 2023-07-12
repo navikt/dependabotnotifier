@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: dependabotnotifier
+  namespace: security-champion-admin
+spec:
+  groups:
+    - name: security-champion-admin
+      rules:
+        - alert: Naisjob failed
+          expr: kube_job_failed{job_name=~"^dependabotnotifier.*", namespace="security-champion-admin"} > 0
+          for: 5m
+          annotations:
+            consequence: Statistics are not collected
+            action: "check the logs"
+            summary: |-
+              Notifies if the latest run failed
+          labels:
+            namespace: security-champion-admin
+            severity: warning

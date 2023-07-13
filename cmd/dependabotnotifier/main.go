@@ -14,21 +14,25 @@ func main() {
 	teamsToken := envOrDie("TEAMS_TOKEN")
 	slackToken := envOrDie("SLACK_TOKEN")
 
-	reposWithoutDepandabotAlerts, err := github.ReposWithDependabotAlertsDisabled("navikt", githubToken)
+	reposWithoutDependabotAlerts, err := github.ReposWithDependabotAlertsDisabled("navikt", githubToken)
 	if err != nil {
 		log.Fatalf("unable to retrieve repos: %v", err)
 	}
-	fmt.Printf("Found %d repos with Depenadbot disabled\n", len(reposWithoutDepandabotAlerts))
+	fmt.Printf("Found %d repos with Depenadbot disabled\n", len(reposWithoutDependabotAlerts))
 
 	repoOwners := make(map[string][]teams.Team)
-	for _, repo := range reposWithoutDepandabotAlerts {
+	var reposWithoutOwners []string
+	for _, repo := range reposWithoutDependabotAlerts {
 		repoFullName := fmt.Sprintf("%s/%s", repo.Owner.Name, repo.Name)
-		teamsWithAdmin, err := teams.AdminsFor(repoFullName, teamsToken)
+		admins, err := teams.AdminsFor(repoFullName, teamsToken)
 		if err != nil {
 			fmt.Printf("%v", err)
 			os.Exit(1)
 		}
-		repoOwners[repoFullName] = teamsWithAdmin
+		repoOwners[repoFullName] = admins
+		if len(admins) == 0 {
+			reposWithoutOwners = append(reposWithoutOwners, repo.Name)
+		}
 	}
 
 	for repo, owners := range repoOwners {
@@ -39,6 +43,9 @@ func main() {
 			err = slack.SendMessage(owner.SlackChannel, heading, msg, slackToken)
 		}
 	}
+
+	fmt.Printf("Repos without owners: %v\n", reposWithoutOwners)
+
 	println("Done!")
 }
 

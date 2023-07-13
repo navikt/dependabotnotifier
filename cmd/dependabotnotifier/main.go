@@ -36,7 +36,7 @@ func main() {
 			fmt.Printf("Notifying %s about %s in %s\n", owner.Slug, repo, owner.SlackChannel)
 			heading := fmt.Sprintf(`:wave: *Hei, %s* :github2:`, owner.Slug)
 			msg := fmt.Sprintf(`Dere er admins i GitHub-repoet *%s*. Dette repoet har ikke Dependabot alerts aktivert. Dependabot hjelper deg å oppdage biblioteker med kjente sårbarheter i appene dine. Du kan sjekke status og enable Dependabot <https://github.com/%s/security|her>. Hvis repoet ikke er i bruk, vurder å arkivere det. Det kan gjøres nederst på <https://github.com/%s/settings|denne siden>.`, repo, repo, repo)
-			err = slack.SendMessage("#jk-tullekanal", heading, msg, slackToken)
+			err = slack.SendMessage(owner.SlackChannel, heading, msg, slackToken)
 		}
 	}
 	println("Done!")

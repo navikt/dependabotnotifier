@@ -85,9 +85,8 @@ func allReposFor(org, authToken string) ([]RestRepo, error) {
 			return nil, err
 		}
 		allRepos = append(allRepos, reposPart...)
-		//linkHeader := res.Header.Get("Link")
-		//url = nextUrl(linkHeader)
-		url = ""
+		linkHeader := res.Header.Get("Link")
+		url = nextUrl(linkHeader)
 	}
 	return allRepos, nil
 }

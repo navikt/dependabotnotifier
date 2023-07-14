@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 )
@@ -25,7 +26,12 @@ type Text struct {
 	Text string `json:"text,omitempty"`
 }
 
-func SendMessage(channel, heading, text, authToken string) error {
+type Response struct {
+	Ok       bool   `json:"ok"`
+	ErrorMsg string `json:"error"`
+}
+
+func SendMessage(channel, heading, text, authToken string) Response {
 	toSend := Message{
 		Channel: channel,
 		Blocks: []Block{
@@ -55,32 +61,44 @@ func SendMessage(channel, heading, text, authToken string) error {
 		"Authorization": {fmt.Sprintf("Bearer %s", authToken)},
 	}
 	if err != nil {
-		return err
+		return NewError(err)
 	}
-	err = postRequest(baseUrl, serialized, extraHeaders)
-	if err != nil {
-		return err
-	}
-	return nil
+	return postRequest(baseUrl, serialized, extraHeaders)
 }
 
-func postRequest(rawUrl string, body []byte, extraHeaders http.Header) error {
+func postRequest(rawUrl string, reqBody []byte, extraHeaders http.Header) Response {
 	u, err := url.Parse(rawUrl)
 	if err != nil {
-		return err
+		return NewError(err)
 	}
-	req, err := http.NewRequest("POST", u.String(), bytes.NewBuffer(body))
+	req, err := http.NewRequest("POST", u.String(), bytes.NewBuffer(reqBody))
 	if err != nil {
-		return err
+		return NewError(err)
 	}
 	req.Header = extraHeaders
 	client := http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
-		return err
+		return NewError(err)
 	}
 	if res.StatusCode != http.StatusOK {
-		return fmt.Errorf("got a %d from %s: %v", res.StatusCode, rawUrl, res)
+		return NewError(fmt.Errorf("got a %d from %s: %v", res.StatusCode, rawUrl, res))
 	}
-	return nil
+	resBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		return NewError(err)
+	}
+	var parsedResponse Response
+	err = json.Unmarshal(resBody, &parsedResponse)
+	if err != nil {
+		return NewError(err)
+	}
+	return parsedResponse
+}
+
+func NewError(err error) Response {
+	return Response{
+		Ok:       false,
+		ErrorMsg: err.Error(),
+	}
 }

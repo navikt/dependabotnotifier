@@ -37,10 +37,15 @@ func main() {
 
 	for repo, owners := range repoOwners {
 		for _, owner := range owners {
-			fmt.Printf("Notifying %s about %s in %s\n", owner.Slug, repo, owner.SlackChannel)
+			fmt.Printf("Notifying %s about %s in %s: ", owner.Slug, repo, owner.SlackChannel)
 			heading := fmt.Sprintf(`:wave: *Hei, %s* :github2:`, owner.Slug)
 			msg := fmt.Sprintf(`Dere er admins i GitHub-repoet *%s*. Dette repoet har ikke Dependabot alerts aktivert. Dependabot hjelper deg å oppdage biblioteker med kjente sårbarheter i appene dine. Du kan sjekke status og enable Dependabot <https://github.com/%s/security|her>. Hvis repoet ikke er i bruk, vurder å arkivere det. Det kan gjøres nederst på <https://github.com/%s/settings|denne siden>.`, repo, repo, repo)
-			err = slack.SendMessage(owner.SlackChannel, heading, msg, slackToken)
+			response := slack.SendMessage("kanalsomikkefinnes", heading, msg, slackToken)
+			if response.Ok {
+				fmt.Println("OK")
+			} else {
+				fmt.Printf("%s\n", response.ErrorMsg)
+			}
 		}
 	}
 

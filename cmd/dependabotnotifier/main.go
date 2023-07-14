@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -49,7 +50,7 @@ func main() {
 		}
 	}
 
-	fmt.Printf("Repos without owners: %v\n", reposWithoutOwners)
+	fmt.Printf("Repos without owners: %v\n", strings.Join(reposWithoutOwners, ","))
 
 	println("Done!")
 }

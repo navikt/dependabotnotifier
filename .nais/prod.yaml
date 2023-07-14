@@ -1,2 +1,2 @@
-schedule: "0 1 * * mon"
+schedule: "0 1 * * thu"
 alert_channel: "security-champion-aktivitet"

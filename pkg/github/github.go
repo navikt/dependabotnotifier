@@ -7,6 +7,7 @@ import (
 	"github.com/tomnomnom/linkheader"
 	"io"
 	"net/http"
+	"strings"
 )
 
 const baseUrl = "https://api.github.com"
@@ -15,6 +16,7 @@ type RestRepo struct {
 	Name     string    `json:"name"`
 	Owner    RepoOwner `json:"owner"`
 	Archived bool      `json:"archived"`
+	Topics   []string  `json:"topics"`
 }
 
 type RepoOwner struct {
@@ -35,6 +37,15 @@ type GQLRepository struct {
 
 func (res GQLResponse) HasDependabotAlertsEnabled() bool {
 	return res.Data.Repository.HasVulnerabilityAlertsEnabled
+}
+
+func (repo RestRepo) HasTopic(topic string) bool {
+	for _, t := range repo.Topics {
+		if strings.ToLower(t) == strings.ToLower(topic) {
+			return true
+		}
+	}
+	return false
 }
 
 func ReposWithDependabotAlertsDisabled(org, authToken string) ([]RestRepo, error) {
@@ -63,7 +74,6 @@ func allReposFor(org, authToken string) ([]RestRepo, error) {
 	var allRepos []RestRepo
 	for url != "" {
 		fmt.Printf("Retrieving repos from %s\n", url)
-		var reposPart []RestRepo
 		extraHeaders := http.Header{
 			"Accept":        {"application/vnd.github.v3+json"},
 			"User-Agent":    {"NAV IT McBotFace"},
@@ -80,11 +90,12 @@ func allReposFor(org, authToken string) ([]RestRepo, error) {
 		if err != nil {
 			return nil, err
 		}
-		err = json.Unmarshal(body, &reposPart)
+		var reposChunk []RestRepo
+		err = json.Unmarshal(body, &reposChunk)
 		if err != nil {
 			return nil, err
 		}
-		allRepos = append(allRepos, reposPart...)
+		allRepos = append(allRepos, reposChunk...)
 		linkHeader := res.Header.Get("Link")
 		url = nextUrl(linkHeader)
 	}

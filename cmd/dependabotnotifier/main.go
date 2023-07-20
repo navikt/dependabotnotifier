@@ -24,6 +24,10 @@ func main() {
 	repoOwners := make(map[string][]teams.Team)
 	var reposWithoutOwners []string
 	for _, repo := range reposWithoutDependabotAlerts {
+		if shouldBeSkipped(repo) {
+			fmt.Printf("skipping repo %s", repo.Name)
+			continue
+		}
 		repoFullName := fmt.Sprintf("%s/%s", repo.Owner.Name, repo.Name)
 		admins, err := teams.AdminsFor(repoFullName, teamsToken)
 		if err != nil {
@@ -53,6 +57,10 @@ func main() {
 	fmt.Printf("Repos without owners: %v\n", strings.Join(reposWithoutOwners, ","))
 
 	println("Done!")
+}
+
+func shouldBeSkipped(repo github.RestRepo) bool {
+	return repo.HasTopic("NoDependabot")
 }
 
 func envOrDie(name string) string {

@@ -40,6 +40,7 @@ func main() {
 		}
 	}
 
+	var teamsWithBogusSlackChannels []string
 	for repo, owners := range repoOwners {
 		for _, owner := range owners {
 			fmt.Printf("Notifying %s about %s in %s: ", owner.Slug, repo, owner.SlackChannel)
@@ -49,12 +50,15 @@ func main() {
 			if response.Ok {
 				fmt.Println("OK")
 			} else {
+				teamsWithBogusSlackChannels = append(teamsWithBogusSlackChannels,
+					fmt.Sprintf("%s -> %s", owner.Slug, owner.SlackChannel))
 				fmt.Printf("%s\n", response.ErrorMsg)
 			}
 		}
 	}
 
-	fmt.Printf("Repos without owners: %v\n", strings.Join(reposWithoutOwners, ","))
+	fmt.Printf("Repos without owners: %s\n", strings.Join(reposWithoutOwners, ","))
+	fmt.Printf("Teams with bogus Slack channels: %s\n", strings.Join(teamsWithBogusSlackChannels, ","))
 
 	println("Done!")
 }

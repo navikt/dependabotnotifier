@@ -14,7 +14,7 @@ spec:
       cpu: "100m"
       memory: 300Mi
   envFrom:
-    - secret: dependabotnotifier
+    - secret: github-security-slack-notifier
   accessPolicy:
     outbound:
       external:

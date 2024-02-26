@@ -64,7 +64,7 @@ query($filter: TeamsFilter) { teams(filter: $filter, offset: $offset, limit: $li
 		"Content-Type":  {"application/json"},
 		"Authorization": {fmt.Sprintf("Bearer %s", authToken)},
 	}
-	resBody, err := httputils.GQLRequest("http://nais-api-cluster.nais-system/query", reqBody, extraHeaders)
+	resBody, err := httputils.GQLRequest("https://apiserver.prod-gcp.nav.cloud.nais.io", reqBody, extraHeaders)
 	if err != nil {
 		return GQLResponse{}, err
 	}

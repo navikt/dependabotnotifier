@@ -46,8 +46,7 @@ func AdminsFor(repo, authToken string) ([]Team, error) {
 }
 
 func singleQuery(repo, authToken string, offset, limit int) (GQLResponse, error) {
-	queryStr := fmt.Sprintf(`
-query($filter: TeamsFilter) { teams(filter: $filter, offset: $offset, limit: $limit) { slug, slackChannel } }", 
+	queryStr := fmt.Sprintf(`"query($filter: TeamsFilter, $offset: Int, $limit: Int) { teams(filter: $filter, offset: $offset, limit: $limit) { slug, slackChannel } }", 
 "variables": { 
   "filter": { 
     "github": { 
@@ -58,7 +57,7 @@ query($filter: TeamsFilter) { teams(filter: $filter, offset: $offset, limit: $li
   "offset": %d, 
   "limit": %d 
 }`, repo, offset, limit)
-	reqBody := fmt.Sprintf(`{"query": "%s"}`, strings.ReplaceAll(queryStr, "\n", " "))
+	reqBody := fmt.Sprintf(`{"query": %s}`, strings.ReplaceAll(queryStr, "\n", " "))
 	extraHeaders := http.Header{
 		"User-Agent":    {"NAV IT McBotFace"},
 		"Content-Type":  {"application/json"},

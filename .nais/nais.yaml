@@ -18,7 +18,7 @@ spec:
   accessPolicy:
     outbound:
       external:
-        - host: apiserver.prod-gcp.nav.cloud.nais.io
+        - host: console.nav.cloud.nais.io
         - host: api.github.com
         - host: slack.com
 

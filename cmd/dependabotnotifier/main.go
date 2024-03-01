@@ -55,8 +55,13 @@ func main() {
 		}
 	}
 
-	fmt.Printf("Repos without owners: %s\n", strings.Join(reposWithoutOwners, ","))
-	fmt.Printf("Teams with bogus Slack channels: %s\n", strings.Join(teamsWithBogusSlackChannels, ","))
+	if len(reposWithoutOwners) != 0 {
+		fmt.Printf("Repos without owners: %s\n", strings.Join(reposWithoutOwners, ","))
+	}
+
+	if len(teamsWithBogusSlackChannels) != 0 {
+		fmt.Printf("Teams with bogus Slack channels: %s\n", strings.Join(teamsWithBogusSlackChannels, ","))
+	}
 
 	println("Done!")
 }

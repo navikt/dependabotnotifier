@@ -58,7 +58,6 @@ func singleQuery(repo, authToken string, offset, limit int) (GQLResponse, error)
   "limit": %d 
 }`, repo, offset, limit)
 	reqBody := fmt.Sprintf(`{"query": %s}`, strings.ReplaceAll(queryStr, "\n", " "))
-	fmt.Println(reqBody)
 	extraHeaders := http.Header{
 		"User-Agent":    {"NAV IT McBotFace"},
 		"Content-Type":  {"application/json"},

@@ -34,12 +34,10 @@ func AdminsFor(repo, authToken string) ([]Team, error) {
 	var allTeams []Team
 	done := false
 	for done != true {
-		fmt.Printf("looking for the owner(s) of %s\n", repo)
 		response, err := singleQuery(repo, authToken, offset, limit)
 		if err != nil {
 			return []Team{}, err
 		}
-		fmt.Printf("%s is owned by %v\n", repo, response.Data.Teams)
 		allTeams = append(allTeams, response.Data.Teams...)
 		done = !response.Data.PageInfo.HasNext
 		offset += response.Data.PageInfo.TotalCount
@@ -60,6 +58,7 @@ func singleQuery(repo, authToken string, offset, limit int) (GQLResponse, error)
   "limit": %d 
 }`, repo, offset, limit)
 	reqBody := fmt.Sprintf(`{"query": %s}`, strings.ReplaceAll(queryStr, "\n", " "))
+	fmt.Println(reqBody)
 	extraHeaders := http.Header{
 		"User-Agent":    {"NAV IT McBotFace"},
 		"Content-Type":  {"application/json"},

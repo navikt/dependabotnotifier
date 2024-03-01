@@ -46,7 +46,7 @@ func AdminsFor(repo, authToken string) ([]Team, error) {
 }
 
 func singleQuery(repo, authToken string, offset, limit int) (GQLResponse, error) {
-	queryStr := fmt.Sprintf(`"query($filter: TeamsFilter, $offset: Int, $limit: Int) { teams(filter: $filter, offset: $offset, limit: $limit) { slug, slackChannel } }", 
+	queryStr := fmt.Sprintf(`"query($filter: TeamsFilter, $offset: Int, $limit: Int) { teams(filter: $filter, offset: $offset, limit: $limit) { nodes { slug, slackChannel }, pageInfo{ hasNextPage } } }", 
 "variables": { 
   "filter": { 
     "github": { 

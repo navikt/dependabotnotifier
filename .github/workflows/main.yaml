@@ -22,12 +22,12 @@ jobs:
         with:
           persist-credentials: false
       - name: Install cosign
-        uses: sigstore/cosign-installer@e1523de7571e31dbe865fd2e80c5c7c23ae71eb4 # ratchet:sigstore/cosign-installer@main
+        uses: sigstore/cosign-installer@19351d009d6b451ccfef9ebbb5e31495dd176d24 # ratchet:sigstore/cosign-installer@main
         with:
-          cosign-release: 'v2.1.1'
+          cosign-release: 'v2.2.4'
       - name: Verify runner image
         run: cosign verify --certificate-identity ${{ env.RUNNERIMG_IDENTITY }} --certificate-oidc-issuer ${{ env.RUNNERIMG_ISSUER }} ${{ env.RUNNER_IMG }}
-      - uses: nais/docker-build-push@14cd7a0a656477da33aa7d627123330990ef3807 # ratchet:nais/docker-build-push@v0
+      - uses: nais/docker-build-push@099f6e6d0b4fa8899d03aae7dd274f87d4ff0651 # ratchet:nais/docker-build-push@v0
         id: docker-build-push
         name: Build and push Docker image
         with:

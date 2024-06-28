@@ -6,13 +6,14 @@ on:
     paths-ignore:
       - "*.md"
   workflow_run:
-    workflows: [ 'Merge Dependabot PRs' ]
-    types: [ completed ]
+    workflows: ['Merge Dependabot PRs']
+    types: [completed]
 jobs:
   build:
     name: Build all the things
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       id-token: write
     env:
       RUNNER_IMG: "gcr.io/distroless/static-debian11"
@@ -47,9 +48,8 @@ jobs:
       - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # ratchet:actions/checkout@v3
         with:
           persist-credentials: false
-      - uses: nais/deploy/actions/deploy@5d8720b0e670aec1ae02a4654c5445bc1ca01ca1 # ratchet:nais/deploy/actions/deploy@v1
+      - uses: nais/deploy/actions/deploy@36f87b6d4722fb7f45f19218bf86ad698829ce70 # ratchet:nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-gcp
           RESOURCE: .nais/nais.yaml,.nais/alerts.yaml
           VARS: .nais/prod.yaml

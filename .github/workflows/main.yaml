@@ -16,9 +16,9 @@ jobs:
       contents: read
       id-token: write
     env:
-      RUNNER_IMG: "gcr.io/distroless/static-debian11"
-      RUNNERIMG_IDENTITY: "keyless@distroless.iam.gserviceaccount.com"
-      RUNNERIMG_ISSUER: "https://accounts.google.com"
+      RUNNER_IMG: "chainguard/static"
+      RUNNERIMG_IDENTITY: "https://github.com/chainguard-images/images/.github/workflows/release.yaml@refs/heads/main"
+      RUNNERIMG_ISSUER: "https://token.actions.githubusercontent.com"
     outputs:
       tag: "${{ steps.docker-build-push.outputs.IMAGE }}"
     steps:

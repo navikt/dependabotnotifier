@@ -35,7 +35,7 @@ jobs:
         id: docker-build-push
         name: Build and push Docker image
         with:
-          team: security-champion-admin
+          team: appsec
           pull: true
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}

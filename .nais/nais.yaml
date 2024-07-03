@@ -2,9 +2,9 @@ apiVersion: nais.io/v1
 kind: Naisjob
 metadata:
   labels:
-    team: security-champion-admin
+    team: appsec
   name:  dependabotnotifier
-  namespace: security-champion-admin
+  namespace: appsec
 spec:
   image: {{ image }}
   schedule: {{ schedule }}

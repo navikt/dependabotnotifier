@@ -1,2 +1,2 @@
 schedule: "0 7 * * thu"
-alert_channel: "security-champion-aktivitet"
+alert_channel: "appsec-aktivitet"

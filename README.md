@@ -14,7 +14,7 @@ Run as a [Naisjob](https://doc.nais.io/naisjob/)
 
 ## 👥 Contact
 
-This project is maintained by [@security-champion-admin](https://github.com/orgs/navikt/teams/security-champion-admin).
+This project is maintained by [@appsec](https://github.com/orgs/navikt/teams/appsec).
 
 Questions and/or feature requests? Please create an [issue](https://github.com/navikt/dependabotnotifier/issues).
 

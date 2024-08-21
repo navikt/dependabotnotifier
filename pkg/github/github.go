@@ -50,6 +50,7 @@ func (repo RestRepo) HasTopic(topic string) bool {
 
 func ReposWithDependabotAlertsDisabled(org, authToken string) ([]RestRepo, error) {
 	allRepos, err := allReposFor(org, authToken)
+	fmt.Printf("Total nr of repos: %d\n", len(allRepos))
 	if err != nil {
 		return nil, err
 	}

@@ -63,7 +63,7 @@ func singleQuery(repo, authToken string, offset, limit int) (GQLResponse, error)
 		"Content-Type":  {"application/json"},
 		"Authorization": {fmt.Sprintf("Bearer %s", authToken)},
 	}
-	resBody, err := httputils.GQLRequest("https://console.nav.cloud.nais.io/query", reqBody, extraHeaders)
+	resBody, err := httputils.GQLRequest("https://console.nav.cloud.nais.io/graphql", reqBody, extraHeaders)
 	if err != nil {
 		return GQLResponse{}, err
 	}

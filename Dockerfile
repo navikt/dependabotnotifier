@@ -1,13 +1,11 @@
-FROM golang:1.22 as builder
+FROM golang:1.23-alpine AS builder
 
 WORKDIR /go/src/app
 COPY . .
 
 RUN go mod download
 
-RUN CGO_ENABLED=0 make dependabotnotifier
-
-RUN make test
+RUN go build -o ./bin/dependabotnotifier ./cmd/dependabotnotifier
 
 FROM gcr.io/distroless/static-debian11
 

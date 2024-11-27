@@ -22,16 +22,16 @@ jobs:
     outputs:
       tag: "${{ steps.docker-build-push.outputs.IMAGE }}"
     steps:
-      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # ratchet:actions/checkout@v3
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
         with:
           persist-credentials: false
       - name: Install cosign
-        uses: sigstore/cosign-installer@19351d009d6b451ccfef9ebbb5e31495dd176d24 # ratchet:sigstore/cosign-installer@main
+        uses: sigstore/cosign-installer@dc72c7d5c4d10cd6bcb8cf6e3fd625a9e5e537da # ratchet:sigstore/cosign-installer@v3
         with:
           cosign-release: 'v2.2.4'
       - name: Verify runner image
         run: cosign verify --certificate-identity ${{ env.RUNNERIMG_IDENTITY }} --certificate-oidc-issuer ${{ env.RUNNERIMG_ISSUER }} ${{ env.RUNNER_IMG }}
-      - uses: nais/docker-build-push@099f6e6d0b4fa8899d03aae7dd274f87d4ff0651 # ratchet:nais/docker-build-push@v0
+      - uses: nais/docker-build-push@e69b82501b1f6e02ed65607ee4cd714ca43dc010 # ratchet:nais/docker-build-push@v0
         id: docker-build-push
         name: Build and push Docker image
         with:
@@ -48,10 +48,10 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # ratchet:actions/checkout@v3
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
         with:
           persist-credentials: false
-      - uses: nais/deploy/actions/deploy@36f87b6d4722fb7f45f19218bf86ad698829ce70 # ratchet:nais/deploy/actions/deploy@v2
+      - uses: nais/deploy/actions/deploy@7c152a10f4da3ca352d57a25eba0b3a8e04882f9 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/nais.yaml,.nais/alerts.yaml

@@ -49,7 +49,7 @@ func NewClient(apiToken string, log logrus.FieldLogger) *Client {
 
 func (c *Client) SendMessage(ctx context.Context, channelName, teamSlug, repoName string) error {
 	heading := fmt.Sprintf(`:wave: Hei, %s :github2:`, teamSlug)
-	text := fmt.Sprintf(`Dere har knyttet GitHub-repoet <https://github.com/navikt/%[1]s|%[1]s> opp til teamet deres via <https://console.nav.cloud.nais.io/team/%[2]s/repositories|Console>. Dette repoet har ikke Dependabot alerts aktivert. Dependabot hjelper deg å oppdage biblioteker med kjente sårbarheter i appene dine. Du kan sjekke status og enable Dependabot <https://github.com/%[1]s/security|her>. Hvis repoet ikke er i bruk, vurder å arkivere det. Det kan gjøres nederst på <https://github.com/%[1]s/settings|denne siden>.`, repoName, teamSlug)
+	text := fmt.Sprintf(`Dere har knyttet GitHub-repoet <https://github.com/%[1]s|%[1]s> opp til teamet deres via <https://console.nav.cloud.nais.io/team/%[2]s/repositories|Console>. Dette repoet har ikke Dependabot alerts aktivert. Dependabot hjelper deg å oppdage biblioteker med kjente sårbarheter i appene dine. Du kan sjekke status og enable Dependabot <https://github.com/%[1]s/security|her>. Hvis repoet ikke er i bruk, vurder å arkivere det. Det kan gjøres nederst på <https://github.com/%[1]s/settings|denne siden>.`, repoName, teamSlug)
 
 	toSend := Message{
 		Channel: channelName,

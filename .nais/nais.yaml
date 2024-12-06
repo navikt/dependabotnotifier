@@ -21,5 +21,9 @@ spec:
         - host: console.nav.cloud.nais.io
         - host: api.github.com
         - host: slack.com
+  observability:
+    logging:
+      destinations:
+        - id: loki
 
 

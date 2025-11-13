@@ -9,6 +9,7 @@ spec:
   image: {{ image }}
   schedule: {{ schedule }}
   ttlSecondsAfterFinished: 300
+  backoffLimit: 1
   resources:
     requests:
       cpu: "100m"
